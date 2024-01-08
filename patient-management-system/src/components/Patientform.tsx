@@ -32,7 +32,10 @@ type Props = {
     compounder: string;
     phn: string;
     doctor: string;
-    prescription: string;
+    prescription: {
+      medicineName: string;
+      dose: string;
+    }[];
   };
   mode: string;
   setViewerType: any;
@@ -52,7 +55,12 @@ function Patientform({
     compounder: "",
     phn: "",
     doctor: "",
-    prescription: "",
+    prescription: [
+      {
+        medicineName: "tab",
+        dose: "twice",
+      },
+    ],
   },
   mode,
   setViewerType,
@@ -169,7 +177,7 @@ function Patientform({
               initialContent={form.values.doctor}
             />
           )}
-          {type === "doctor" && (
+          {/* {type === "doctor" && (
             <DynamicFindings
               form={form}
               type="prescription"
@@ -177,7 +185,49 @@ function Patientform({
               canEdit={type === "doctor"}
               initialContent={form.values.prescription}
             />
-          )}
+          )} */}
+          <Group justify="space-between">
+            <Text color="maroon" size="20px" style={{ fontWeight: "bold" }}>
+              Prescriptions
+            </Text>
+            <Button
+              color="green"
+              onClick={() =>
+                form.insertListItem("prescription", {
+                  medicineName: "",
+                  dose: "",
+                })
+              }
+            >
+              Add
+            </Button>
+          </Group>
+          {form.values.prescription.map((med, i) => (
+            <Stack gap={2}>
+              <Group align="flex-end" justify="space-between">
+                <Group justify="left">
+                  <TextInput
+                    label="Medicine"
+                    placeholder="Medicine Name"
+                    mt="md"
+                    {...form.getInputProps(`prescription.${i}.medicineName`)}
+                  />
+                  <TextInput
+                    label="Dose"
+                    placeholder="Dose"
+                    mt="md"
+                    {...form.getInputProps(`prescription.${i}.dose`)}
+                  />
+                </Group>
+                <Button
+                  color="red"
+                  onClick={() => form.removeListItem("prescription", i)}
+                >
+                  Remove
+                </Button>
+              </Group>
+            </Stack>
+          ))}
         </Stack>
         <Group justify="right">
           <Button
