@@ -1,5 +1,5 @@
 .loginSelection {
-    border: 2px solid red;
+    border: 2px solid #d296ff;
     height: 20vh;
     border-radius: 16px;
     flex: 1;
@@ -8,6 +8,6 @@
 }
 
 .loginSelection:hover{
-    background-color: rgb(242, 102, 102);
+    background-color:#d296ff;
     color: white;
 }

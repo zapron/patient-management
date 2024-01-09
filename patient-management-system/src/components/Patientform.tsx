@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   Group,
   NumberInput,
@@ -7,36 +6,22 @@ import {
   Stack,
   Text,
   TextInput,
-  Notification,
+  Switch,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import DynamicFindings from "./DynamicFindings";
-import dayjs from "dayjs";
-import { DateInput } from "@mantine/dates";
+
 import {
   addInfoToFirestore,
   updatePatientRecords,
 } from "../utils/firestoreUtils";
-import { update } from "firebase/database";
+
+import Prescriptions from "./Prescriptions";
+import { PatientData, PatientDataAPI } from "../types";
 
 type Props = {
   type: string;
-  init?: {
-    pid: string;
-    visit: number;
-    name: string;
-    age: string;
-    sex: string;
-    // dob: "",
-    status: string;
-    compounder: string;
-    phn: string;
-    doctor: string;
-    prescription: {
-      medicineName: string;
-      dose: string;
-    }[];
-  };
+  init?: PatientData;
   mode: string;
   setViewerType: any;
 };
@@ -50,17 +35,11 @@ function Patientform({
     last: "",
     age: "",
     sex: "",
-    // dob: "",
-    status: "Need Doctors Approval",
+    status: false,
     compounder: "",
     phn: "",
     doctor: "",
-    prescription: [
-      {
-        medicineName: "tab",
-        dose: "twice",
-      },
-    ],
+    prescription: [],
   },
   mode,
   setViewerType,
@@ -75,15 +54,17 @@ function Patientform({
       last: (value) =>
         value.length < 2 ? "Name must have at least 2 letters" : null,
       age: (value) =>
-        value < 10 ? "You must be at least 10 to register" : null,
+        parseInt(value) < 10 ? "You must be at least 10 to register" : null,
       sex: (value) => (value === "" ? "Please select a value" : null),
       phn: (value) =>
-        value < 10000000000 && value >= 1000000000 ? null : "Enter valid phone",
+        parseInt(value) < 10000000000 && parseInt(value) >= 1000000000
+          ? null
+          : "Enter valid phone",
     },
   });
 
   return (
-    <Stack>
+    <Stack aria-disabled={true}>
       <form
         onSubmit={form.onSubmit(() => {
           mode === "add"
@@ -98,8 +79,20 @@ function Patientform({
               Patient KYC
             </Text>
             <Group>
+              <Switch
+                disabled={mode !== "update"}
+                labelPosition="left"
+                label={
+                  form.values.status ? "Doctor Verified" : "Pending Doctor View"
+                }
+                checked={form.values.status}
+                color="green"
+                onChange={() =>
+                  form.setFieldValue("status", !form.values.status)
+                }
+              />
               <Text>PID: {form.values.pid}</Text>
-              <Text style={{ fontWeight: "bold" }} color="green">
+              <Text style={{ fontWeight: "500" }} color="green">
                 Visit: {form.values.visit}
               </Text>
             </Group>
@@ -117,14 +110,6 @@ function Patientform({
                 {...form.getInputProps("last")}
               />
             </Group>
-
-            {/* <DateInput
-              // minDate={new Date()}
-              maxDate={dayjs(new Date()).add(1, "month").toDate()}
-              label="Date of Birth"
-              placeholder="Date input"
-              {...form.getInputProps("dob")}
-            /> */}
 
             <Group grow>
               <TextInput
@@ -151,25 +136,21 @@ function Patientform({
                 <Radio value="other" label="Other" />
               </Group>
             </Radio.Group>
-
-            <TextInput
-              label="Status"
-              placeholder="Status"
-              mt="md"
-              {...form.getInputProps("status")}
-            />
           </Stack>
         </Stack>
         <Stack my={20} gap={10}>
           <DynamicFindings
+            key="compounder"
             form={form}
             type="compounder"
             label="Initial Findings"
             canEdit={type === "new" || type === "doctor"}
-            initialContent={form.values.compounder}
+            initialContent={form?.values?.compounder || ""}
           />
+
           {type === "doctor" && (
             <DynamicFindings
+              key="doctor"
               canEdit={type === "doctor"}
               form={form}
               type="doctor"
@@ -177,69 +158,14 @@ function Patientform({
               initialContent={form.values.doctor}
             />
           )}
-          {/* {type === "doctor" && (
-            <DynamicFindings
-              form={form}
-              type="prescription"
-              label="Prescriptions"
-              canEdit={type === "doctor"}
-              initialContent={form.values.prescription}
-            />
-          )} */}
-          <Group justify="space-between">
-            <Text color="maroon" size="20px" style={{ fontWeight: "bold" }}>
-              Prescriptions
-            </Text>
-            <Button
-              color="green"
-              onClick={() =>
-                form.insertListItem("prescription", {
-                  medicineName: "",
-                  dose: "",
-                })
-              }
-            >
-              Add
-            </Button>
-          </Group>
-          {form.values.prescription.map((med, i) => (
-            <Stack gap={2}>
-              <Group align="flex-end" justify="space-between">
-                <Group justify="left">
-                  <TextInput
-                    label="Medicine"
-                    placeholder="Medicine Name"
-                    mt="md"
-                    {...form.getInputProps(`prescription.${i}.medicineName`)}
-                  />
-                  <TextInput
-                    label="Dose"
-                    placeholder="Dose"
-                    mt="md"
-                    {...form.getInputProps(`prescription.${i}.dose`)}
-                  />
-                </Group>
-                <Button
-                  color="red"
-                  onClick={() => form.removeListItem("prescription", i)}
-                >
-                  Remove
-                </Button>
-              </Group>
-            </Stack>
-          ))}
+          {type === "doctor" && <Prescriptions form={form} />}
         </Stack>
         <Group justify="right">
-          <Button
-            type="submit"
-            mt="sm"
-            // onClick={() => {
-            //   console.log(form.values);
-            //   // addInfoToFirestore(form);
-            // }}
-          >
-            Save
-          </Button>
+          {mode !== "print" && (
+            <Button type="submit" mt="sm" disabled={!form.isDirty()}>
+              Save
+            </Button>
+          )}
         </Group>
       </form>
     </Stack>

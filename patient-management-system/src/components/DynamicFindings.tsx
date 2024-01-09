@@ -1,5 +1,5 @@
 import { RichTextEditor, Link } from "@mantine/tiptap";
-import { useEditor } from "@tiptap/react";
+import { Editor, useEditor } from "@tiptap/react";
 import Highlight from "@tiptap/extension-highlight";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
@@ -32,7 +32,7 @@ function DynamicFindings({
     content,
     editable: canEdit,
 
-    onUpdate({ editor }) {
+    onUpdate({ editor }: { editor: Editor }) {
       form.setFieldValue(type, editor.getHTML());
       setContent(editor.getHTML());
     },

@@ -1,9 +1,11 @@
 import React from "react";
 import Patientform from "./Patientform";
 import { Paper } from "@mantine/core";
+import { PatientData } from "../types";
 
 type Props = {
-  selected: any;
+  selected: PatientData;
+  setViewerType: React.Dispatch<React.SetStateAction<string>>;
 };
 
 function SelectedPatient({ selected, setViewerType }: Props) {

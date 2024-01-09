@@ -1,18 +1,19 @@
-import { Box, Center, Group, Text } from "@mantine/core";
+import { Box, Center, Group, Paper, Text } from "@mantine/core";
 import classes from "./LoginSelection.module.css";
 import { useState } from "react";
 
 import VisitorType from "./VIsitorType";
 import DoctorScreen from "./DoctorScreen";
 
-function LoginSelection() {
-  const [viewertype, setViewerType] = useState<string>("");
+function LoginSelection({ viewertype, setViewerType }) {
   return (
-    <>
+    <Box>
       {viewertype === "" && (
         <Group p="20px" gap="xl">
           {["Compounder", "Doctor"].map((item) => (
-            <Box
+            <Paper
+              withBorder
+              shadow="xl"
               key={item}
               className={classes.loginSelection}
               onClick={() => setViewerType(item)}
@@ -22,7 +23,7 @@ function LoginSelection() {
                   {item}
                 </Text>
               </Center>
-            </Box>
+            </Paper>
           ))}
         </Group>
       )}
@@ -33,7 +34,7 @@ function LoginSelection() {
       {viewertype === "Doctor" && (
         <DoctorScreen setViewerType={setViewerType} />
       )}
-    </>
+    </Box>
   );
 }
 
