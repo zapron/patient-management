@@ -9,6 +9,7 @@ import {
   Modal,
   Stack,
   Text,
+  Tooltip,
 } from "@mantine/core";
 
 import SelectedPatient from "./SelectedPatient";
@@ -67,9 +68,13 @@ function DoctorScreen({ setViewerType }: Props) {
                     {pat.first} {pat.last}
                   </Text>
                   {pat.status ? (
-                    <IconUserCheck size={16} color="green" />
+                    <Tooltip label="Doctor verified">
+                      <IconUserCheck size={16} color="green" />
+                    </Tooltip>
                   ) : (
-                    <IconCalendarTime size={16} color="orange" />
+                    <Tooltip label="pending doctor approval">
+                      <IconCalendarTime size={16} color="orange" />
+                    </Tooltip>
                   )}
                 </Group>
 
@@ -83,7 +88,9 @@ function DoctorScreen({ setViewerType }: Props) {
                       setPreviewSelected([pat]);
                     }}
                   >
-                    <IconEye color="maroon" size={18} />
+                    <Tooltip label="Preview">
+                      <IconEye color="maroon" size={18} />
+                    </Tooltip>
                   </ActionIcon>
 
                   {pat.status ? (
@@ -93,7 +100,9 @@ function DoctorScreen({ setViewerType }: Props) {
                         setPrintSelected([pat]);
                       }}
                     >
-                      <IconPrinter size={16} />
+                      <Tooltip label="Print">
+                        <IconPrinter size={16} />
+                      </Tooltip>
                     </ActionIcon>
                   ) : (
                     <ActionIcon style={{ visibility: "hidden" }} />
