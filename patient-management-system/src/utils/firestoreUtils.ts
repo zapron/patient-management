@@ -1,4 +1,4 @@
-import { addDoc, collection, doc, getDocs, orderBy, query, updateDoc, where } from "firebase/firestore";
+import { addDoc, collection, doc, getDocs, or, orderBy, query, updateDoc, where } from "firebase/firestore";
 import { db } from "../firebase/firebase";
 import { notifications } from "@mantine/notifications";
 
@@ -7,9 +7,7 @@ export async function addInfoToFirestore(form: any) {
       const docRef = await addDoc(collection(db, "patients"), {
         ...form.values,
       });
-      // return alert(
-      //   ` PATIENT RECORD SAVED SUCCESSFULLY with id ${JSON.stringify(docRef)}`
-      // );
+
      notifications.show({
       title: "Success",
       message: `Successfuly saved record for ${form.values.first}`,
@@ -76,8 +74,8 @@ export async function addInfoToFirestore(form: any) {
     return patients
   }
 
-  export async function getSearchPatient(pid:string){
-    const q = query(collection(db, "patients"), where("pid", "==", pid));
+  export async function getSearchPatient(value:string){
+    const q = query(collection(db, "patients"), or(where("first","==",value ),where("last","==",value ),where("pid","==",value )));
     const querySnapshot = await getDocs(query(q));
     const patients:any[] = []
     querySnapshot.forEach((doc)=>{

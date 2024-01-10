@@ -2,6 +2,7 @@ import { Box, Button, Group, Paper, Text } from "@mantine/core";
 import React, { useState } from "react";
 import Patientform from "./Patientform";
 import DevInProgress from "./DevInProgress";
+import OldPatientScreen from "./OldPatientScreen";
 
 function VisitorType({ setViewerType }) {
   const [type, setType] = useState<string>();
@@ -40,7 +41,7 @@ function VisitorType({ setViewerType }) {
           </Paper>
         </Group>
       )}
-      {type === "old" && <DevInProgress />}
+      {type === "old" && <OldPatientScreen />}
     </>
   );
 }
