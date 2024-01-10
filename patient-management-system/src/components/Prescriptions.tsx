@@ -29,9 +29,9 @@ function Prescriptions({ form }: { form: any }) {
           Add
         </Button>
       </Group>
-      {form.values.prescription.map((i: number) => (
-        <Stack gap={2}>
-          <Group align="flex-end" justify="space-between">
+      <Stack gap={0}>
+        {form.values.prescription.map((_med: object, i: number) => (
+          <Group key={i} align="flex-end" justify="space-between">
             <Group justify="left">
               <TextInput
                 label="Medicine"
@@ -61,8 +61,8 @@ function Prescriptions({ form }: { form: any }) {
               <IconTrash size={18} />
             </ActionIcon>
           </Group>
-        </Stack>
-      ))}
+        ))}
+      </Stack>
     </Box>
   );
 }

@@ -1,43 +1,8 @@
-import {
-  Box,
-  Button,
-  Group,
-  NumberInput,
-  Radio,
-  Stack,
-  Text,
-  TextInput,
-  Notification,
-  Switch,
-} from "@mantine/core";
-import { useForm } from "@mantine/form";
-import DynamicFindings from "./DynamicFindings";
-import dayjs from "dayjs";
-import { DateInput } from "@mantine/dates";
-import {
-  addInfoToFirestore,
-  updatePatientRecords,
-} from "../utils/firestoreUtils";
-import { update } from "firebase/database";
-import Prescriptions from "./Prescriptions";
+import { Box, Group, Stack, Text, TextInput, Switch } from "@mantine/core";
+import { PatientData } from "../types";
 
 type Props = {
-  init?: {
-    pid: string;
-    visit: number;
-    name: string;
-    age: string;
-    sex: string;
-    status: boolean;
-    compounder: string;
-    phn: string;
-    doctor: string;
-    prescription: {
-      medicineName: string;
-      dose: string;
-      course: "";
-    }[];
-  };
+  init?: PatientData;
   mode: string;
 };
 
@@ -49,7 +14,6 @@ function PreviewPrintform({
     last: "",
     age: "",
     sex: "",
-    // dob: "",
     status: false,
     compounder: "",
     phn: "",
@@ -141,8 +105,12 @@ function PreviewPrintform({
               }}
             >
               <Text style={{ fontWeight: "bold" }}>Prescriptions</Text>
-              {init?.prescription?.map((med, i) => (
-                <Group align="flex-end" justify="space-between">
+              {init?.prescription?.map((med) => (
+                <Group
+                  key={med.medicineName}
+                  align="flex-end"
+                  justify="space-between"
+                >
                   <Group justify="left">
                     <TextInput
                       value={med.medicineName}
