@@ -86,7 +86,7 @@ function DoctorScreen({ setViewerType }: Props) {
                     <IconEye color="maroon" size={18} />
                   </ActionIcon>
 
-                  {pat.status && (
+                  {pat.status ? (
                     <ActionIcon
                       variant="transparent"
                       onClick={() => {
@@ -95,6 +95,8 @@ function DoctorScreen({ setViewerType }: Props) {
                     >
                       <IconPrinter size={16} />
                     </ActionIcon>
+                  ) : (
+                    <ActionIcon style={{ visibility: "hidden" }} />
                   )}
                   <Button variant="gradient" onClick={() => setSelected([pat])}>
                     See Details

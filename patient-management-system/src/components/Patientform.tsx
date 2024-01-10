@@ -122,6 +122,7 @@ function Patientform({
               <NumberInput
                 label="Phn no"
                 placeholder="Enter Phone no"
+                rightSection={<></>}
                 max={9999999999}
                 clampBehavior="strict"
                 mt="md"
